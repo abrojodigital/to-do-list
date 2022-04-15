@@ -9,6 +9,15 @@ function App() {
   const [id, setId] = React.useState('')
   const [error, setError] = React.useState(null)
 
+// cargar tareas
+  React.useEffect(() => {
+    const tareasLS = localStorage.getItem('tareas')
+    if (tareasLS) {
+      setTareas(JSON.parse(tareasLS))
+    }
+  }, [])
+
+
   const agregarTarea = e => {
     e.preventDefault()
     if (!tarea.trim()) {
@@ -20,6 +29,7 @@ function App() {
       ...tareas,
       { tarea, id: nanoid() }
     ])
+    localStorage.setItem('tareas', JSON.stringify(tareas))
     setTarea('')
     setError(null)
   }
@@ -45,6 +55,7 @@ function App() {
 
     const arrayEditado = tareas.map(item => item.id === id ? { id, tarea } : item)
     setTareas(arrayEditado)
+    localStorage.setItem('tareas', JSON.stringify(arrayEditado))
     setModoEdicion(false)
     setTarea('')
     setId('')
@@ -71,7 +82,7 @@ function App() {
                       onClick={() => eliminarTarea(item.id)}
                     >Eliminar</button>
                     <button
-                      className="btn btn-sm btn-warning float-right"
+                      className="btn btn-sm btn-warning float-right mx-auto"
                       onClick={() => editar(item)}
                     >Editar</button>
                   </li>
